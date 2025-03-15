@@ -1,2 +1,27 @@
 @import "tailwindcss";
 
+#app {
+    font-weight: normal;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle farthest-corner at top right, #E0EDFF, transparent 70%), /* Brighter version of #D0E0FB */
+      radial-gradient(circle farthest-corner at top left, #F0FAFF, transparent 40%), /* Brighter version of #E3F4FA */
+      radial-gradient(circle farthest-corner at bottom left, #F0E8FF, transparent 70%), /* Brighter version of #E3DFEE */
+      radial-gradient(circle farthest-corner at bottom right, #D9EBFF, transparent 70%), /* Brighter version of #BDD3FD */
+      linear-gradient(90deg, #FFE5F1, #FFE5F1); /* Base color remains the same */
+    position: relative;
+    overflow: hidden;
+  }
+  
+
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+
+  .primary{
+    /* color: #0F8CE9; */
+  }
+  

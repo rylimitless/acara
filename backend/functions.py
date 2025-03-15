@@ -36,5 +36,46 @@ def signup(username:str,password:str,name:str) -> str:
     return True
 
 
-signup('test', 'test', 'test') # True
-signup('test' , 'test','test') # False
+def user_exist(userid:int) -> int:
+    cur.execute('SELECT * FROM Users WHERE user_id = %s', (userid,))
+    
+    if cur.fetchone() != None:
+        return True
+    return False
+
+def login_user(username, password):
+    # Add your authentication logic here
+    # Return tuple of (success boolean, user_id)
+    # Example:
+    cur.execute('SELECT user_id, password FROM Users WHERE username = %s', (username,))
+    user = cur.fetchone()
+    
+    # Check if user exists and password matches
+    print(user)
+    if user and check_password(password, user[1]):
+        return True, user[0]  # Return success and user_id
+    
+    return False, None  # Return failure if no match or wrong password
+  
+
+def create_org(name,description,admin_id):
+    cur.execute('INSERT INTO EventGroups (username, description, admin) VALUES (%s, %s, %s)', (name, description, admin_id))
+    conn.commit()
+    return True
+
+
+def org_exist(org_id:int) -> int:
+    cur.execute('SELECT * FROM EventGroups WHERE   group_id = %s', (org_id,))
+    if cur.fetchone() != None:
+        return True
+    return False
+
+def create_event(name,description,group_id):
+    cur.execute('INSERT INTO Events (name, description, group_id) VALUES (%s, %s, %s)', (name, description, group_id))
+    conn.commit()
+    return True
+
+# def create_task(name,description,event_id,priority):
+#     cur.execute('INSERT INTO Tasks (title, description, event_id) VALUES (%s, %s, %s,%s)', (name, description, event_id))
+#     conn.commit()
+#     return True

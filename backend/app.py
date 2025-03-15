@@ -9,37 +9,95 @@ def start():
     return {'name': 'Hello World!'}
 
 
-@app.route('/login')
+
+@app.route('/login', methods=['POST'])
 def login():
-    username = request.args.get('username')
-    password = request.args.get('password')
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form
 
-    if username == None or password == None:
-        return {'error': 'Missing username or password'} , 400
-        
-    login_status = functions.login(username, password)
-    if login_status == False:
-        return {'error': 'Invalid username or password'} , 400
+    username = data.get('username')
+
+    password = data.get('password')
+  
+    if not all([username, password]):
+        return {'error': 'Missing username or password'}, 400
     
-    session['username'] = username
+    success, user_id = login_user(username, password)
+    # TODO: Add your login authentication logic here
+    if not success:
+        return {'error': 'Invalid credentials'}, 401
+        
+    return {
+        'message': 'Login successful',
+        'username': username,
+        'user_id': user_id
+    }, 200
 
-    return {'status': 'success'} ,200
-    #login function here
-
-@app.route('/register')
+@app.route('/register', methods=['POST'])
 def register():
-    username = request.args.get('username')
-    password = request.args.get('password')
-    name   = request.args.get('name')
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form
+        
+    username = data.get('username')
+    password = data.get('password')
+    name = data.get('name')
 
-    if username == None or password == None:
-        return {'error': 'Missing username or password'} , 400
+    if not all([username, password, name]):
+        return {'error': 'Missing required fields'}, 400
 
-    status = functions.signup(username, password, name)
-    if status == False:
-        return {'error': 'Username already exists'} , 400
-    return {'status': 'success'} , 200
-    #register function here
+    status = signup(username, password, name)
+    if not status:
+        return {'error': 'Username already exists'}, 400
+    return {'status': 'success', 'message': f'User {username} created successfully'}, 201
+
+@app.route('/create_org', methods=['POST'])
+def create_organization():
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form
+        
+    name = data.get('name')
+    description = data.get('description')
+    admin_id = data.get('admin_id')
+
+    if not all([name, description, admin_id]):
+        return {'error': 'Missing required fields'}, 400
+    if not user_exist(admin_id):
+        return {'error': 'User does not exist'}, 400
+
+    status = create_org(name, description, admin_id)
+    if not status:
+        return {'error': 'Organization already exists'}, 400
+    return {'status': 'success', 'message': f'Organization {name} created successfully'}, 201
+
+
+
+@app.route('/create_event', methods=['POST'])
+def create_event_plan():
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form
+        
+    name = data.get('name')
+    description = data.get('description')
+    group_id = data.get('group_id')
+
+    if not all([name, description, group_id]):
+        return {'error': 'Missing required fields'}, 400
+    if not org_exist(group_id):
+        return {'error': 'Organization does not exist'}, 400
+
+    status = create_event(name, description, group_id)
+    if not status:
+        return {'error': 'Event already exists'}, 400
+    return {'status': 'success', 'message': f'Event {name} created successfully'}, 201
+
 
 if __name__ == '__main__':  
     app.run(debug=True)

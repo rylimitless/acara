@@ -18,7 +18,14 @@ def check_password(password:str, hashed:str):
     return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
 
 def login(username:str,password:str) -> str:
-    pass
+    cur.execute('SELECT * FROM Users WHERE username = %s', (username,))
+    user = cur.fetchone()
+    print(user)
+    if user == None:
+        return False
+    if check_password(password, user[2]):
+        return True
+    return False
 
 def signup(username:str,password:str,name:str) -> str:
     cur.execute('SELECT * FROM Users WHERE username = %s', (username,))
@@ -27,6 +34,7 @@ def signup(username:str,password:str,name:str) -> str:
     cur.execute('INSERT INTO Users (username, password, name) VALUES (%s, %s, %s)', (username, hash_password(password), name))
     conn.commit()
     return True
+
 
 signup('test', 'test', 'test') # True
 signup('test' , 'test','test') # False

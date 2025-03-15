@@ -98,6 +98,14 @@ def create_event_plan():
         return {'error': 'Event already exists'}, 400
     return {'status': 'success', 'message': f'Event {name} created successfully'}, 201
 
+@app.route('/getevents',)
+def get_events():
+    id = request.args.get('id')
+    if not id:
+        return {'error': 'Missing required fields'}, 400
+    
+    return functions.get_events()
+
 
 if __name__ == '__main__':  
     app.run(debug=True)

@@ -75,6 +75,10 @@ def create_event(name,description,group_id):
     conn.commit()
     return True
 
+def get_events(group_id):
+    cur.execute('SELECT * FROM Events WHERE group_id = %s', (group_id,))
+    return cur.fetchall()
+
 # def create_task(name,description,event_id,priority):
 #     cur.execute('INSERT INTO Tasks (title, description, event_id) VALUES (%s, %s, %s,%s)', (name, description, event_id))
 #     conn.commit()

@@ -23,11 +23,15 @@ CREATE TABLE IF NOT EXISTS GroupMembers(
 
 CREATE TABLE IF NOT EXISTS Events(
     event_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    group_id INTEGER NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    date DATE NOT NULL
+    date DATE NOT NULL,
+    FOREIGN KEY (group_id) REFERENCES EventGroups(group_id)
 
 );
+
+
 
 CREATE TABLE IF NOT EXISTS Tasks(
     task_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -36,5 +40,14 @@ CREATE TABLE IF NOT EXISTS Tasks(
     priority INTEGER DEFAULT 0,
     assigned_user_id INT,
     event_id INT NOT NULL
-);  
+); 
 
+
+CREATE TABLE IF NOT EXISTS Events(
+    event_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    group_id INTEGER NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    dt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (group_id) REFERENCES EventGroups(group_id)
+);

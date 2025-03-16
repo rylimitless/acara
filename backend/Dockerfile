@@ -14,5 +14,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # Copy your application code
 COPY . .
 
+EXPOSE 7000
+
 # Define the command to run your application
 CMD ["python3", "your_app.py"]

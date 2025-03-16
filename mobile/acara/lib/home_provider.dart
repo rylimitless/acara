@@ -91,7 +91,7 @@ class HomeProvider extends ChangeNotifier {
     'id': '1',
    };
 
-    final url = Uri.http('localhost:5000', '/getTasks', params);
+    final url = Uri.http('backend.filetree.tech', '/getTasks', params);
     //  final response = await http.get(Uri.parse('http://localhost:5000/getTasks'));
     final response = await http.get(url);
 
@@ -119,7 +119,7 @@ class HomeProvider extends ChangeNotifier {
     'id': '1',
    };
 
-    final url = Uri.http('localhost:5000', '/getevents', params);
+    final url = Uri.http('backend.filetree.tech', '/getevents', params);
     //  final response = await http.get(Uri.parse('http://localhost:5000/getTasks'));
     final response = await http.get(url);
 
@@ -156,9 +156,9 @@ class HomeProvider extends ChangeNotifier {
 
     addMessage(textMessage);
 
-    
+
     if(message.text!=""){
-        final url = Uri.http('localhost:5000', '/getQuery', params);
+        final url = Uri.https('backend.filetree.tech', '/getQuery', params);
     //  final response = await http.get(Uri.parse('http://localhost:5000/getTasks'));
     final response = await http.get(url);
 

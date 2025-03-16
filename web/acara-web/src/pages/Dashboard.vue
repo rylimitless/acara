@@ -135,7 +135,7 @@
   </div>
 
     <div class=" left-52 bg-white">
-      <div> <h1 class="text-blue text-2xl ml-8 my-4">For your Tech Conference</h1> </div>
+      <div> <h1 class="text-blue text-2xl  font-semibold ml-8 my-4">For your Tech Conference</h1> </div>
 
     </div>
 

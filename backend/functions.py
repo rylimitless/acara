@@ -1,4 +1,6 @@
 import bcrypt
+import requests
+import json
 import mysql.connector
 
 conn = mysql.connector.connect(
@@ -114,6 +116,23 @@ def get_events_for_user(user_id):
         })
     return events
 
+def get_summaries(user_id):
+    pass
+
+
+def get_query(query):
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    data = {
+        "contents": [{
+            "parts": [{"text": query}]
+        }]
+    }
+
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    return response.json()
 # def create_task(name,description,event_id,priority):
 #     cur.execute('INSERT INTO Tasks (title, description, event_id) VALUES (%s, %s, %s,%s)', (name, description, event_id))
 #     conn.commit()

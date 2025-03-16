@@ -125,6 +125,14 @@ def getTasks():
     data = get_user_tasks(id)
     return {'data': data}
 
+@app.route('/getAIsummaries')
+def get_summaries():
+    id = request.args.get('id')
+    if not id:
+        return {'error': 'Missing required fields'}, 400
+    
+    # data = get_summaries(id)
+    return {'data': None}
 
     if not all([name, description, assign_user_id,event_id]) and priority != None:
         return {'error': 'Missing required fields'}, 400

@@ -9,12 +9,13 @@
         <h2 class="form-title">Create an Event</h2>
       </div>
 
-      <div class="tabs">
-        <div class="tab" :class="{ active: currentStep === 0 }" @click="currentStep = 0">Details</div>
-        <div class="tab" :class="{ active: currentStep === 1 }" @click="currentStep = 1">Date and location</div>
-        <div class="tab" :class="{ active: currentStep === 2 }" @click="currentStep = 2">Guests</div>
-        <div class="progress-bar" :style="{ width: (currentStep + 1) * 33.33 + '%' }"></div>
-      </div>
+    <div class="form-actions">
+        <button class="btn-cancel" @click="cancel">Cancel</button>
+        <button class="btn-cancel" @click="previousStep" v-if="currentStep > 0">Back</button>
+        <button class="btn-next" @click="handleNextOrSubmit(currentStep < steps.length - 1 ? 'Next' : 'Submit')">
+          {{ currentStep < steps.length - 1 ? 'Next' : 'Submit' }}
+        </button>
+    </div>
 
     <form @submit.prevent="submitForm" action="https://0f31-173-225-243-208.ngrok-free.app/create_event" method="POST">
       <div class="form-fields">
@@ -132,13 +133,29 @@
         </div>
       </div>
 
-      <div class="form-actions">
+      <!-- <div class="form-actions">
         <button class="btn-cancel" @click="cancel">Cancel</button>
         <button class="btn-cancel" @click="previousStep" v-if="currentStep > 0">Back</button>
-        <button class="btn-next" @click="nextStep">{{ currentStep < steps.length - 1 ? 'Next' : 'Submit' }}</button>
-      </div>
+        <button class="btn-next" @click="handleNextOrSubmit">
+          {{ currentStep < steps.length - 1 ? 'Next' : 'Submit' }}
+        </button>
+        </div> -->
     </form>
+
+    <!-- Success Modal -->
+    <div v-if="showModal" class="modal-overlay">
+      <div class="modal-content">
+        <p>Successfully</p>
+        <button @click="closeModal">Close</button>
+      </div>
+    </div>
+
+    <!-- Background blur effect -->
+    <div v-if="showModal" class="blur-background"></div>
+
+
     <!-- <div v-if="message" class="message">{{ message }}</div> -->
+    <p v-if="message">{{ message }}</p>
 
     </div>
   </div>
@@ -163,6 +180,8 @@ export default {
       steps: ['Details', 'Date and location', 'Guests']
     }
   },
+
+
   methods: {
     toggleAiSuggestions() {
       this.aiSuggestions = !this.aiSuggestions;
@@ -171,25 +190,47 @@ export default {
       }
     },
     nextStep() {
-      if (this.currentStep < this.steps.length - 1) {
-        this.currentStep++
-      } else {
-        this.submitForm()
-      }
-    },
-    previousStep() {
-      if (this.currentStep > 0) {
-        this.currentStep--
-      }
-    },
-    submitForm() {
-      console.log('Form submitted:', this.eventData)
-      // Here you would typically send the data to your backend
-      // using an HTTP request
-      this.message = 'Event added'; // Highlighted line
-      //alert('Event added'); // Display an alert when the form is submitted
+    if (this.currentStep < this.steps.length - 1) {
+      this.currentStep++;
+    }
+  },
+  previousStep() {
+    if (this.currentStep > 0) {
+      this.currentStep--;
+    }
+  },
+  cancel() {
+    // Handle cancel logic
+    console.log('Form cancelled');
+    this.$router.push({ name: 'Home' }); // Redirect to home or another page
+  },
+  handleNextOrSubmit(buttonText) {
+    if (buttonText === 'Next') {
+      // If the button text is "Next", go to the next step
+      this.nextStep();
+    } else if (buttonText === 'Submit') {
+      // If the button text is "Submit", submit the form
+      this.submitForm();
+    }
+  },
+  submitForm() {
+    console.log('Form submitted:', this.eventData);
 
-    },
+    // Emit the event data (optional, if needed for parent components)
+    this.$emit('event-created', this.eventData);
+
+    // Redirect to the Event.vue page with the form data
+    this.$router.push({
+      name: 'Event', // Name of the route for Event.vue
+      query: { eventData: JSON.stringify(this.eventData) } // Pass data as query params
+    });
+
+    // Show a success alert
+    alert('Event was successfully uploaded!');
+  }
+},
+
+
 
     goToSchedule() {
       this.$router.push({ name: 'Schedule' });
@@ -234,7 +275,7 @@ export default {
     //   return colors[index % colors.length];
     // }
   }
-}
+
 </script>
 
 <style scoped>
@@ -800,4 +841,37 @@ textarea {
   cursor: pointer;
 }
 
+/* form */
+
+<style scoped>
+.modal-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.blur-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  z-index: 999;
+}
+
+.modal-content {
+  text-align: center;
+}
+
+.modal-content button {
+  margin-top: 10px;
+}
 </style>
+

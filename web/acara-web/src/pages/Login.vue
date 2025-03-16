@@ -32,6 +32,7 @@
           <button
             type="submit"
             class="bg-blue text-white mx-5 font-medium py-3 px-4 rounded-full mt-4 hover:bg-blue-600 transition-colors"
+            @click="this.$router.push('/dashboard')"
           >
             Login
           </button>
@@ -57,6 +58,25 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+
+// methods: {
+//     handleLogin() {
+//       // Perform login logic here (e.g., form validation, API call, etc.)
+//       console.log('Login button clicked');
+
+//       // Redirect to the /dashboard route
+//       this.$router.push('/dashboard');
+//     }
+//   }
+
+  const handleLogin = ()=> {
+      // Perform login logic here (e.g., form validation, API call, etc.)
+      console.log('Login button clicked');
+
+      // Redirect to the /dashboard route
+      this.$router.push('/dashboard');
+    }
+
 
 const router = useRouter();
 const loginData = ref({

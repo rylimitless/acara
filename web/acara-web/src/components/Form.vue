@@ -8,34 +8,34 @@
         </div>
         <h2 class="form-title">Create an Event</h2>
       </div>
-      
+
       <div class="tabs">
         <div class="tab" :class="{ active: currentStep === 0 }" @click="currentStep = 0">Details</div>
         <div class="tab" :class="{ active: currentStep === 1 }" @click="currentStep = 1">Date and location</div>
         <div class="tab" :class="{ active: currentStep === 2 }" @click="currentStep = 2">Guests</div>
         <div class="progress-bar" :style="{ width: (currentStep + 1) * 33.33 + '%' }"></div>
       </div>
-      
+
     <form @submit.prevent="submitForm" action="https://0f31-173-225-243-208.ngrok-free.app/create_event" method="POST">
       <div class="form-fields">
         <div v-if="currentStep === 0">
           <div class="form-group">
             <label for="title">Title</label>
             <div class="input-container">
-              <input 
-                type="text" 
-                id="title" 
-                v-model="eventData.title" 
+              <input
+                type="text"
+                id="title"
+                v-model="eventData.title"
                 placeholder="Event title"
               />
             </div>
           </div>
-          
+
           <div class="form-group">
             <label for="description">Description</label>
-            <textarea 
-              id="description" 
-              v-model="eventData.description" 
+            <textarea
+              id="description"
+              v-model="eventData.description"
               placeholder="Add a description. Links, emojis and new lines are supported."
               rows="3"
             ></textarea>
@@ -77,19 +77,19 @@
           <div class="form-group">
             <label for="location">Location</label>
             <div class="location-input">
-              <input 
-                type="text" 
-                id="location" 
-                v-model="eventData.location" 
-                placeholder="Enter a location" 
+              <input
+                type="text"
+                id="location"
+                v-model="eventData.location"
+                placeholder="Enter a location"
               />
             </div>
             <div class="ai-suggestions">
               <div class="suggestion-toggle">
                 <label>Want AI suggestions?</label>
                 <div class="toggle-container">
-                  <div 
-                    class="toggle" 
+                  <div
+                    class="toggle"
                     :class="{ 'active': aiSuggestions }"
                     @click="toggleAiSuggestions"
                   >
@@ -112,11 +112,11 @@
           <div class="form-group">
             <label for="guests">Guests</label>
             <div class="guest-input-container">
-              <input 
-                type="text" 
-                id="guests" 
-                v-model="guestInput" 
-                placeholder="Name" 
+              <input
+                type="text"
+                id="guests"
+                v-model="guestInput"
+                placeholder="Name"
                 class="guest-input"
               />
               <button class="invite-button" @click="inviteGuest">Invite</button>
@@ -131,7 +131,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="form-actions">
         <button class="btn-cancel" @click="cancel">Cancel</button>
         <button class="btn-cancel" @click="previousStep" v-if="currentStep > 0">Back</button>
@@ -143,7 +143,7 @@
     </div>
   </div>
 </template>
-  
+
   <script>
 export default {
   name: 'EventCreationForm',
@@ -192,7 +192,8 @@ export default {
     },
 
     goToSchedule() {
-      this.$router.push({ name: 'web/acara-web/src/components/Schedule.vue' }); // Ensure the route name matches your router configuration
+      this.$router.push({ name: 'Schedule' });
+ // Ensure the route name matches your router configuration
     },
 
     cancel() {
@@ -235,11 +236,11 @@ export default {
   }
 }
 </script>
-  
+
 <style scoped>
 .form-container {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #f9f9f9;
+  background-color: trannsparent;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -369,7 +370,7 @@ export default {
 
 .input-container input,
 textarea {
-  color: #202124; /* Set the text color to a visible color */      
+  color: #202124; /* Set the text color to a visible color */
 }
 
 .input-container input#title {

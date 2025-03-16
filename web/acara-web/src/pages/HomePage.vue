@@ -15,7 +15,7 @@
         <button class="bg-blue hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-xl transition-colors">
           Start Planning
         </button>
-        <button class="border border-gray text-blue font-medium py-3 px-6 rounded-lg flex items-center transition-colors hover:bg-gray-100">
+        <button class="border bg-transparent border-gray text-blue font-medium py-3 px-6 rounded-lg flex items-center transition-colors hover:bg-gray-100">
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 8l6 4-6 4V8z"></path>

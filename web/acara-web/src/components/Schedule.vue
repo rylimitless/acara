@@ -1,26 +1,25 @@
 <template>
     <div class="scheduler">
-      <h2>AI Scheduler</h2>
-  
+      <h2 class="text-4xl text-blue-500 mb-4">AI Scheduler</h2>
+
       <!-- Form to Input Availability -->
       <div class="form-group">
-        <div><h3>Username</h3></div>
-        
+  
         <label>Start Date:</label>
         <input type="date" v-model="startDate" />
-  
+
         <label>End Date:</label>
         <input type="date" v-model="endDate" />
-  
+
         <label>Start Time:</label>
         <input type="time" v-model="startTime" />
-  
+
         <label>End Time:</label>
         <input type="time" v-model="endTime" />
-  
+
         <button @click="generateTimeSlots">Generate Time Slots</button>
       </div>
-  
+
       <!-- Availability Table -->
       <div v-if="timeSlots.length">
         <h3>Availability Table</h3>
@@ -42,7 +41,7 @@
         </table>
         <button @click="findBestTime">Find the Best Time</button>
       </div>
-  
+
       <!-- Best Time List -->
       <div v-if="bestTimes.length">
         <h3>Selected Times</h3>
@@ -104,7 +103,7 @@ export default {
   }
 };
 </script>
-  
+
 <style>
 .scheduler {
   max-width: 1000px;

@@ -303,7 +303,7 @@ export default {
   },
   methods: {
     createNewEvent() {
-      this.$router.push('/events/new');
+      this.$router.push('/form');
     },
     selectEvent(eventId) {
       this.activeEventId = eventId;

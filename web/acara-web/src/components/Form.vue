@@ -6,7 +6,7 @@
             <!-- Simple document icon using CSS -->
             <div class="document-svg"></div>
           </div>
-          <h2 class="form-title">What's your event about?</h2>
+          <h2 class="form-title">Create an Event</h2>
         </div>
         
         <div class="tabs">
@@ -31,26 +31,6 @@
             </div>
             
             <div class="form-group">
-              <label for="category">Event Type</label>
-              <div class="select-container">
-                <select id="category" v-model="eventData.category">
-                  <option value="" disabled selected>Select a category</option>
-                  <option value="party">Party</option>
-                  <option value="ceremony">Ceremony</option>
-                  <option value="conference">Conference</option>
-                  <option value="seminar">Seminar</option>
-                  <option value="tournament">Tournament</option>
-                  <option value="cultural">Cultural Event</option>
-                  <option value="other">Other</option>
-                </select>
-                <div class="select-arrow">
-                  <!-- Custom chevron arrow using CSS -->
-                  <div class="chevron-down"></div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="form-group">
               <label for="description">Description</label>
               <textarea 
                 id="description" 
@@ -60,23 +40,6 @@
               ></textarea>
             </div>
   
-            <div class="form-group">
-              <label for="category">Event Size</label>
-              <div class="select-container">
-                <select id="category" v-model="eventData.category">
-                  <option value="" disabled selected>Select a category</option>
-                  <option value="intimate">Intimate (1-20 people)</option>
-                  <option value="small">Small (21-50 people)</option>
-                  <option value="medium">Medium (51-200 people)</option>
-                  <option value="large">Large (201 -500 people)</option>
-                  <option value="huge">Huge (500+ people)</option>
-                </select>
-                <div class="select-arrow">
-                  <!-- Custom chevron arrow using CSS -->
-                  <div class="chevron-down"></div>
-                </div>
-              </div>
-            </div>
           </div>
   
           <div v-if="currentStep === 1">
@@ -124,7 +87,7 @@
               </div>
               <div class="ai-suggestions">
                 <div class="suggestion-toggle">
-                  <label>Want AI suggestions</label>
+                  <label>Want AI suggestions?</label>
                   <div class="toggle-container">
                     <div 
                       class="toggle" 
@@ -135,51 +98,50 @@
                     </div>
                   </div>
                 </div>
-                <div v-if="aiSuggestions" class="location-types">
-                  <label>Location Type</label>
-                  <div class="radio-options">
-                    <div class="radio-option">
-                      <input 
-                        type="radio" 
-                        id="indoors" 
-                        value="indoors" 
-                        v-model="eventData.locationType"
-                      />
-                      <label for="indoors">Indoors</label>
-                    </div>
-                    <div class="radio-option">
-                      <input 
-                        type="radio" 
-                        id="outdoors" 
-                        value="outdoors" 
-                        v-model="eventData.locationType"
-                      />
-                      <label for="outdoors">Outdoors</label>
-                    </div>
-                    <div class="radio-option">
-                      <input 
-                        type="radio" 
-                        id="virtual" 
-                        value="virtual" 
-                        v-model="eventData.locationType"
-                      />
-                      <label for="virtual">Virtual</label>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
+
   
           <div v-if="currentStep === 2">
-            <div class="form-group">
-              <label for="guests">Guests</label>
-              <input type="text" id="guests" v-model="eventData.guests" placeholder="Guest names" />
+            <div class="form-header">
+            <div class="people-icon">
+              <div class="people-svg"></div>
+            </div>
+            <h2 class="form-title">Who should join it?</h2>
+          </div>
+
+          <div class="form-group">
+            <label for="guests">Guests</label>
+            <div class="guest-input-container">
+              <input 
+                type="text" 
+                id="guests" 
+                v-model="guestInput" 
+                placeholder="Name" 
+                class="guest-input"
+              />
+              <button class="invite-button" @click="inviteGuest">Invite</button>
+            </div>
+          </div>
+
+          <div class="guest-avatars">
+            <div class="avatar" v-for="(guest, index) in guests" :key="index">
+              <div 
+                class="avatar-circle" 
+                :style="{ backgroundColor: getAvatarColor(index) }"
+              >
+                {{ getInitials(guest) }}
+                <span class="remove-avatar" @click="removeGuest(index)">×</span>
+
+              </div>
             </div>
           </div>
         </div>
+      </div>
         
         <div class="form-actions">
+          <button class="btn-cancel" @click="cancel">Cancel</button>
           <button class="btn-cancel" @click="previousStep" v-if="currentStep > 0">Back</button>
           <button class="btn-next" @click="nextStep">{{ currentStep < steps.length - 1 ? 'Next' : 'Submit' }}</button>
         </div>
@@ -194,15 +156,12 @@ export default {
     return {
       eventData: {
         title: '',
-        category: '',
         description: '',
         date: '',
         startTime: '',
         endTime: '',
         location: '',
-        locationType: '',
         guests: '',
-        size: ''
       },
       aiSuggestions: false,
       currentStep: 0,
@@ -231,6 +190,32 @@ export default {
     submitForm() {
       console.log('Form submitted:', this.eventData)
       // Here you would typically send the data to your backend
+    },
+    cancel() {
+      this.$router.push({ path: '/' });
+    },
+    inviteGuest() {
+      if (this.guestInput) {
+        this.guests.push(this.guestInput);
+        this.guestInput = '';
+      }
+    },
+    removeGuest(index) {
+      this.guests.splice(index, 1);
+    },
+    getInitials(name) {
+      return name.split(' ').map(word => word[0]).join('').toUpperCase();
+    },
+    getAvatarColor(index) {
+      // Array of colors for avatars
+      const colors = [
+        '#4285F4', // blue
+        '#34A853', // green
+        '#FBBC05', // yellow
+        '#EA4335', // red
+        '#8AB4F8'  // light blue
+      ];
+      return colors[index % colors.length];
     }
   }
 }
@@ -441,6 +426,17 @@ textarea {
   border-radius: 4px;
 }
 
+.btn-back {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: none;
+  color: #5f6368;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
 .btn-next {
   padding: 8px 24px;
   background-color: #1a73e8;
@@ -453,6 +449,10 @@ textarea {
 }
 
 .btn-cancel:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.btn-next:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -691,51 +691,74 @@ textarea {
   left: 18px;
 }
 
-.location-types {
-  margin-top: 16px;
-}
-
-.location-types label {
-  display: block;
-  font-size: 14px;
-  color: #202124;
-  margin-bottom: 8px;
-}
-
-.radio-option {
+.guest-input-container {
   display: flex;
   align-items: center;
+  margin-bottom: 16px;
 }
 
-.radio-option input[type="radio"] {
+.guest-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
   margin-right: 8px;
-  appearance: none;
+  color:#202124
+}
+
+.invite-button {
+  padding: 8px 16px;
+  background-color: #1a73e8;
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.guest-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #dadce0;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+.remove-avatar {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff0000;
+  color: white;
+  border-radius: 50%;
   width: 16px;
   height: 16px;
-  border: 2px solid #000; /* Black border */
-  border-radius: 50%;
-  background-color: #fff; /* White background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
   cursor: pointer;
-  position: relative;
-}
-
-.radio-option input[type="radio"]:checked::before {
-  content: "";
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #000; /* Black dot */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.radio-option label {
-  font-size: 14px;
-  color: #202124;
-  font-weight: normal; /* Remove bold */
 }
 
 </style>

@@ -3,7 +3,10 @@
     <nav class="flex items-center justify-between max-w-7xl mx-auto">
       <!-- Logo -->
       <div class="flex items-center">
-        <router-link to="/" class="text-3xl font-bold text-blue-500">Acara</router-link>
+        <router-link to="/" class="text-3xl font-bold text-blue-500 flex items-center">
+      <img src="@/assets/logoo.png" alt="Logo" class="mr-2 h-[110px]">
+
+    </router-link>
       </div>
 
       <div class="hidden md:flex items-center">

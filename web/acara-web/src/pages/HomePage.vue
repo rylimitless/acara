@@ -1,7 +1,7 @@
 
 
 <template>
-  <div class="flex flex-col md:flex-row items-center justify-between py-12 mt-16">
+  <div class="flex flex-col md:flex-row items-center justify-between py-12 ">
     <!-- Left side content -->
     <div class="max-w-lg">
       <h1 class="text-6xl font-bold text-gray-800 mt-8 mb-4 leading-snug">Managing Events Just Got Easier! </h1>

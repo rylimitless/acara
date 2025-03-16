@@ -10,11 +10,11 @@
         <!-- Form Fields -->
         <form class="flex flex-col gap-4" @submit.prevent="submitLogin">
           <div class="flex flex-col gap-2">
-            <label class="text-sm ml-5 font-medium text-blue-800">Email</label>
+            <label class="text-sm ml-5 font-medium text-blue-800">Username</label>
             <input
-              v-model="loginData.email"
-              type="email"
-              placeholder="Enter your email"
+              v-model="loginData.username"
+              type="username"
+              placeholder="Enter your username"
               class="p-3 rounded-full mx-5 h-[42px] border bg-white border-gray-200 text-sm"
             />
           </div>
@@ -60,20 +60,20 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const loginData = ref({
-  email: '',
+  username: '',
   password: ''
 });
 
 const submitLogin = () => {
 
   const jsonData = JSON.stringify({
-    email: loginData.value.email,
+    username: loginData.value.username,
     password: loginData.value.password
   });
 
   console.log('Login data as JSON:', jsonData);
 
-  fetch('/api/login', {
+  fetch('/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

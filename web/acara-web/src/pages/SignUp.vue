@@ -20,11 +20,11 @@
           </div>
 
           <div class="flex flex-col gap-2">
-            <label class="text-sm ml-5 font-medium text-blue-800">Email</label>
+            <label class="text-sm ml-5 font-medium text-blue-800">Username</label>
             <input
-              v-model="formData.email"
-              type="email"
-              placeholder="Enter your email"
+              v-model="formData.username"
+              type="username"
+              placeholder="Enter your username"
               class="p-3 rounded-full mx-5 h-[42px] border bg-white border-gray-200 text-sm"
             />
           </div>
@@ -77,13 +77,13 @@ const formData = ref({
 const submitForm = () => {
   const jsonData = JSON.stringify({
     name: formData.value.name,
-    email: formData.value.email,
+    username: formData.value.username,
     password: formData.value.password
   });
 
   console.log('Form data as JSON:', jsonData);
 
-  fetch('/api/register', {
+  fetch('/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

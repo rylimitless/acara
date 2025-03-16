@@ -21,7 +21,6 @@
             <div class="form-group">
               <label for="title">Title</label>
               <div class="input-container">
-                <span class="emoji">📝</span>
                 <input 
                   type="text" 
                   id="title" 
@@ -60,40 +59,119 @@
                 rows="3"
               ></textarea>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label for="category">Event Size</label>
-            <div class="select-container">
-              <select id="category" v-model="eventData.category">
-                <option value="" disabled selected>Select a category</option>
-                <option value="intimate">Intimate (1-20 people)</option>
-                <option value="small">Small (21-50 people)</option>
-                <option value="medium">Medium (51-200 people)</option>
-                <option value="large">Large (201 -500 people)</option>
-                <option value="huge">Huge (500+ people)</option>
+  
+            <div class="form-group">
+              <label for="category">Event Size</label>
+              <div class="select-container">
+                <select id="category" v-model="eventData.category">
+                  <option value="" disabled selected>Select a category</option>
+                  <option value="intimate">Intimate (1-20 people)</option>
+                  <option value="small">Small (21-50 people)</option>
+                  <option value="medium">Medium (51-200 people)</option>
+                  <option value="large">Large (201 -500 people)</option>
+                  <option value="huge">Huge (500+ people)</option>
                 </select>
                 <div class="select-arrow">
-                    <!-- Custom chevron arrow using CSS -->
-                    <div class="chevron-down"></div>
+                  <!-- Custom chevron arrow using CSS -->
+                  <div class="chevron-down"></div>
                 </div>
+              </div>
             </div>
-        </div>     
+          </div>
   
           <div v-if="currentStep === 1">
-            <!-- Date and location fields go here -->
+    
+  
             <div class="form-group">
-            <label for="date">When is the event?</label>
-            <input type="date" id="date" v-model="eventData.date" />
+                <label for="title">Date and Time</label>
+              <div class="date-time-picker">
+                <div class="date-input">
+                  <input type="date" v-model="eventData.date" />
+                  <button class="calendar-button">
+                    <!-- <div class="calendar-icon"></div> -->
+                  </button>
+                </div>
+                <div class="time-range">
+                  <span class="time-label">from</span>
+                  <div class="time-input">
+                    <input type="time" v-model="eventData.startTime" />
+                    <button class="time-button">
+                      <div class="clock-icon"></div>
+                    </button>
+                  </div>
+                  <span class="time-label">to</span>
+                  <div class="time-input">
+                    <input type="time" v-model="eventData.endTime" />
+                    <button class="time-button">
+                      <div class="clock-icon"></div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <button class="availability-button">
+                Find based on participants' availability
+              </button>
+            </div>
+  
+            <div class="form-group">
+                <label for="title">Location</label>
+                <div class="location-input">
+                <input 
+                  type="text" 
+                  v-model="eventData.location" 
+                  placeholder="Enter a location" 
+                />
+              </div>
+              <div class="ai-suggestions">
+                <div class="suggestion-toggle">
+                  <label>Want AI suggestions</label>
+                  <div class="toggle-container">
+                    <div 
+                      class="toggle" 
+                      :class="{ 'active': aiSuggestions }"
+                      @click="toggleAiSuggestions"
+                    >
+                      <div class="toggle-button"></div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="aiSuggestions" class="location-types">
+                  <label>Location Type</label>
+                  <div class="radio-options">
+                    <div class="radio-option">
+                      <input 
+                        type="radio" 
+                        id="indoors" 
+                        value="indoors" 
+                        v-model="eventData.locationType"
+                      />
+                      <label for="indoors">Indoors</label>
+                    </div>
+                    <div class="radio-option">
+                      <input 
+                        type="radio" 
+                        id="outdoors" 
+                        value="outdoors" 
+                        v-model="eventData.locationType"
+                      />
+                      <label for="outdoors">Outdoors</label>
+                    </div>
+                    <div class="radio-option">
+                      <input 
+                        type="radio" 
+                        id="virtual" 
+                        value="virtual" 
+                        v-model="eventData.locationType"
+                      />
+                      <label for="virtual">Virtual</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="location">Location</label>
-            <input type="text" id="location" v-model="eventData.location" placeholder="Event location" />
-          </div>
-        </div>
   
           <div v-if="currentStep === 2">
-            <!-- Guests fields go here -->
             <div class="form-group">
               <label for="guests">Guests</label>
               <input type="text" id="guests" v-model="eventData.guests" placeholder="Guest names" />
@@ -110,133 +188,144 @@
   </template>
   
   <script>
-  export default {
-    name: 'EventCreationForm',
-    data() {
-      return {
-        eventData: {
-          title: '',
-          category: '',
-          description: '',
-          date: '',
-          location: '',
-          guests: ''
-        },
-        currentStep: 0,
-        steps: ['Details', 'Date and location', 'Guests']
+export default {
+  name: 'EventCreationForm',
+  data() {
+    return {
+      eventData: {
+        title: '',
+        category: '',
+        description: '',
+        date: '',
+        startTime: '',
+        endTime: '',
+        location: '',
+        locationType: '',
+        guests: '',
+        size: ''
+      },
+      aiSuggestions: false,
+      currentStep: 0,
+      steps: ['Details', 'Date and location', 'Guests']
+    }
+  },
+  methods: {
+    toggleAiSuggestions() {
+      this.aiSuggestions = !this.aiSuggestions;
+      if (!this.aiSuggestions) {
+        this.eventData.locationType = '';
       }
     },
-    methods: {
-      nextStep() {
-        if (this.currentStep < this.steps.length - 1) {
-          this.currentStep++
-        } else {
-          this.submitForm()
-        }
-      },
-      previousStep() {
-        if (this.currentStep > 0) {
-          this.currentStep--
-        }
-      },
-      submitForm() {
-        console.log('Form submitted:', this.eventData)
-        // Here you would typically send the data to your backend
+    nextStep() {
+      if (this.currentStep < this.steps.length - 1) {
+        this.currentStep++
+      } else {
+        this.submitForm()
       }
+    },
+    previousStep() {
+      if (this.currentStep > 0) {
+        this.currentStep--
+      }
+    },
+    submitForm() {
+      console.log('Form submitted:', this.eventData)
+      // Here you would typically send the data to your backend
     }
   }
-  </script>
+}
+</script>
   
-  <style scoped>
-  .form-container {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f9f9f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-  }
-  
-  .form-content {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 550px;
-    padding: 24px;
-  }
-  
-  .form-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 24px;
-  }
-  
-  .document-icon {
-    margin-right: 12px;
-    color: #5f6368;
-    width: 20px;
-    height: 20px;
-    position: relative;
-  }
-  
-  .document-svg {
-    width: 16px;
-    height: 20px;
-    position: relative;
-    border: 2px solid #5f6368;
-    border-radius: 2px;
-  }
-  
-  .document-svg:before {
-    content: "";
-    position: absolute;
-    top: 4px;
-    left: 3px;
-    width: 10px;
-    height: 2px;
-    background: #5f6368;
-  }
-  
-  .document-svg:after {
-    content: "";
-    position: absolute;
-    top: 8px;
-    left: 3px;
-    width: 10px;
-    height: 2px;
-    background: #5f6368;
-  }
-  
-  .form-title {
-    font-size: 20px;
-    font-weight: 500;
-    color: #202124;
-    margin: 0;
-  }
-  
-  .tabs {
-    display: flex;
-    border-bottom: 1px solid #e0e0e0;
-    position: relative;
-    margin-bottom: 24px;
-  }
-  
-  .tab {
-    padding: 12px 16px;
-    color: #5f6368;
-    font-size: 14px;
-    cursor: pointer;
-    position: relative;
-  }
-  
-  .tab.active {
-    color: #1a73e8;
-    font-weight: 500;
-  }
-  
-  .progress-bar {
+<style scoped>
+.form-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.form-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 550px;
+  padding: 24px;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.document-icon {
+  margin-right: 12px;
+  color: #5f6368;
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+
+.document-svg {
+  width: 16px;
+  height: 20px;
+  position: relative;
+  border: 2px solid #5f6368;
+  border-radius: 2px;
+}
+
+.document-svg:before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 3px;
+  width: 10px;
+  height: 2px;
+  background: #5f6368;
+}
+
+.document-svg:after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 3px;
+  width: 10px;
+  height: 2px;
+  background: #5f6368;
+}
+
+.form-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: #202124;
+  margin: 0;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.tab {
+  padding: 12px 16px;
+  color: #5f6368;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+}
+
+.tab.active {
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+.progress-bar {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -244,130 +333,409 @@
   background-color: #1a73e8;
   transition: width 0.3s;
 }
-  
-  .form-fields {
-    margin-bottom: 24px;
-  }
-  
-  .form-group {
-    margin-bottom: 16px;
-  }
-  
-  .form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #202124;
-    margin-bottom: 8px;
-  }
-  
-  .input-container {
-    display: flex;
-    align-items: center;
-    border: 1px solid #dadce0;
-    border-radius: 4px;
-    padding: 8px 12px;
-  }
-  
-  .input-container input {
-    border: none;
-    outline: none;
-    width: 100%;
-    font-size: 14px;
-    margin-left: 8px;
-  }
 
-  .input-container input,
-    textarea {
-    color: #202124; /* Set the text color to a visible color */
-    }
-    
-  .emoji {
-    color: #70757a;
-    font-size: 16px;
-  }
-  
-  .select-container {
-    position: relative;
-  }
-  
-  select {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #dadce0;
-    border-radius: 4px;
-    font-size: 14px;
-    appearance: none;
-    background-color: white;
-    color: #202124;
-  }
-  
-  .select-arrow {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #5f6368;
-    pointer-events: none;
-    width: 12px;
-    height: 12px;
-  }
-  
-  .chevron-down {
-    width: 10px;
-    height: 10px;
-    border-style: solid;
-    border-width: 0 2px 2px 0;
-    margin-bottom: 10px;
-    border-color: #5f6368;
-    transform: rotate(45deg);
-    display: inline-block;
-  }
-  
-  textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #dadce0;
-    border-radius: 4px;
-    font-size: 14px;
-    resize: vertical;
-    font-family: inherit;
-    color: #202124;
-  }
-  
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-  
-  .btn-cancel {
-    padding: 8px 16px;
-    background-color: transparent;
-    border: none;
-    color: #5f6368;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  .btn-next {
-    padding: 8px 24px;
-    background-color: #1a73e8;
-    border: none;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  .btn-cancel:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  
-  .btn-next:hover {
-    background-color: #1765cc;
-  }
-  </style>
+.form-fields {
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 8px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+
+.input-container input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.input-container input,
+textarea {
+  color: #202124; /* Set the text color to a visible color */
+}
+
+.emoji {
+  color: #70757a;
+  font-size: 16px;
+}
+
+.select-container {
+  position: relative;
+}
+
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  appearance: none;
+  background-color: white;
+  color: #202124;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #5f6368;
+  pointer-events: none;
+  width: 12px;
+  height: 12px;
+}
+
+.chevron-down {
+  width: 10px;
+  height: 10px;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  margin-bottom: 10px;
+  border-color: #5f6368;
+  transform: rotate(45deg);
+  display: inline-block;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+  font-family: inherit;
+  color: #202124;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-cancel {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: none;
+  color: #5f6368;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-next {
+  padding: 8px 24px;
+  background-color: #1a73e8;
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-cancel:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.btn-next:hover {
+  background-color: #1765cc;
+}
+
+/* New styles for the date and location section */
+.location-icon {
+  margin-right: 12px;
+  color: #5f6368;
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+
+.location-pin {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #5f6368;
+  position: relative;
+  top: 0;
+  left: 4px;
+}
+
+.location-pin:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: -8px;
+  left: -4px;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 12px solid #5f6368;
+}
+
+.date-time-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.date-input {
+  display: flex;
+  align-items: center;
+}
+
+.date-input input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  color:#202124
+}
+
+.calendar-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  margin-left: -34px;
+}
+
+.calendar-icon {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #5f6368;
+  border-radius: 2px;
+  position: relative;
+}
+
+/* .calendar-icon:before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 3px;
+  width: 1px;
+  height: 4px;
+  background: #5f6368;
+}
+
+.calendar-icon:after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: 3px;
+  width: 1px;
+  height: 4px;
+  background: #5f6368;
+} */
+
+.time-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.time-label {
+  color: #5f6368;
+  font-size: 14px;
+}
+
+.time-input {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.time-input input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  color:#202124
+}
+
+.time-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  margin-left: -34px;
+}
+
+.clock-icon {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #5f6368;
+  border-radius: 50%;
+  position: relative;
+}
+
+.clock-icon:before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 4px;
+  height: 1px;
+  background: #5f6368;
+  transform: rotate(45deg);
+  transform-origin: 0 0;
+}
+
+.availability-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  margin-top: 12px;
+  background-color: #1a73e8;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.availability-icon {
+  margin-right: 8px;
+}
+
+.location-input {
+  margin-bottom: 16px;
+}
+
+.location-input input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  color:#202124
+}
+
+.ai-suggestions {
+  margin-top: 16px;
+}
+
+.suggestion-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.suggestion-toggle label {
+  font-size: 14px;
+  color: #202124;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+}
+
+.toggle {
+  width: 36px;
+  height: 20px;
+  background-color: #dadce0;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle.active {
+  background-color: #1a73e8;
+}
+
+.toggle-button {
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.3s;
+}
+
+.toggle.active .toggle-button {
+  left: 18px;
+}
+
+.location-types {
+  margin-top: 16px;
+}
+
+.location-types label {
+  display: block;
+  font-size: 14px;
+  color: #202124;
+  margin-bottom: 8px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+}
+
+.radio-option input[type="radio"] {
+  margin-right: 8px;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #000; /* Black border */
+  border-radius: 50%;
+  background-color: #fff; /* White background */
+  cursor: pointer;
+  position: relative;
+}
+
+.radio-option input[type="radio"]:checked::before {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #000; /* Black dot */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.radio-option label {
+  font-size: 14px;
+  color: #202124;
+  font-weight: normal; /* Remove bold */
+}
+
+</style>

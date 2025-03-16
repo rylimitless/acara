@@ -1,13 +1,18 @@
-FROM ubuntu
+FROM python:3.12-slim 
+
 WORKDIR /app
+
+COPY requirements.txt .
+
+# Create and activate a virtual environment
+RUN python3 -m venv venv
+ENV PATH="/app/venv/bin:$PATH"
+
+# Install dependencies within the virtual environment
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy your application code
 COPY . .
 
-RUN apt-get update && apt-get install -y python3 python3-pip
-
-RUN adduser app
-
-USER app
-
-RUN pip3 install -r requirements.txt
-
-CMD ["python3", "app.py"]
+# Define the command to run your application
+CMD ["python3", "your_app.py"]

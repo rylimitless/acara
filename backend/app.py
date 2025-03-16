@@ -123,5 +123,20 @@ def get_summaries():
     # data = get_summaries(id)
     return {'data': None}
 
+@app.route('/getQuery')
+def getQuery():
+    print("here")
+
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.args.get('query')
+    query = data
+    if not query:
+        return {'error': 'Missing required fields'}, 400
+    print("got here")
+    data = get_query(query)
+    return {'reply': data}
+
 if __name__ == '__main__':  
     app.run(debug=True)

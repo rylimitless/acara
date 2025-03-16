@@ -65,7 +65,7 @@ class _SummaryState extends State<Summary> {
                     icon: const Icon(Icons.summarize_outlined, size: 26),
                     color:Theme.of(context).colorScheme.primary,
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => Summary()),
                       );

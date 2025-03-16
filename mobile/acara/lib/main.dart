@@ -1,3 +1,4 @@
+import 'package:acara/chat.dart';
 import 'package:acara/home_provider.dart';
 import 'package:acara/summary.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Summary()),
+                        MaterialPageRoute(builder: (context) => ChatPage()),
                       );
                     },
                   ),

@@ -109,20 +109,41 @@ def get_events_for_user(user_id):
 def get_summaries(user_id):
     pass
 
+def gethistory():
+    cur.execute('SELECT * FROM chathistory limit 5')
+    return cur.fetchall()
+
+def storehistory(query,response):
+    cur.execute('INSERT INTO chathistory (message, response) VALUES (%s, %s)', (query, response))
+    conn.commit()
+    return True
 
 def get_query(query):
-    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCN1ByE6My2yoxyiM1XhziX_fqkeT1dE2k"
     headers = {
         'Content-Type': 'application/json'
     }
+
+    prep = f"""
+    you are an AI model that is to help generate a plan for an event that is given, like what tasks could be done and what could be the best way to them
+    try to add spacing between each topic. if the prompt was not clear, please ask for more information. Mkae the messages somwewhat short unless specified otherwise, followups can always be asked
+
+    prompt: {query} and these are the last up to 5 messages and response from the AI model
+    {gethistory()}  
+"""
     data = {
         "contents": [{
-            "parts": [{"text": query}]
+            "parts": [{"text": prep}]
         }]
     }
 
     response = requests.post(url, headers=headers, data=json.dumps(data))
-    return response.json()
+    data = response.json()
+
+    reply = data['candidates'][0]['content']['parts'][0]['text']
+    storehistory(query, reply)
+
+    return data
 # def create_task(name,description,event_id,priority):
 #     cur.execute('INSERT INTO Tasks (title, description, event_id) VALUES (%s, %s, %s,%s)', (name, description, event_id))
 #     conn.commit()

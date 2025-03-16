@@ -1,110 +1,108 @@
 <template>
-    <div class="form-container">
-      <div class="form-content">
-        <div class="form-header">
-          <div class="document-icon">
-            <!-- Simple document icon using CSS -->
-            <div class="document-svg"></div>
+  <div class="form-container">
+    <div class="form-content">
+      <div class="form-header">
+        <div class="document-icon">
+          <!-- Simple document icon using CSS -->
+          <div class="document-svg"></div>
+        </div>
+        <h2 class="form-title">Create an Event</h2>
+      </div>
+      
+      <div class="tabs">
+        <div class="tab" :class="{ active: currentStep === 0 }" @click="currentStep = 0">Details</div>
+        <div class="tab" :class="{ active: currentStep === 1 }" @click="currentStep = 1">Date and location</div>
+        <div class="tab" :class="{ active: currentStep === 2 }" @click="currentStep = 2">Guests</div>
+        <div class="progress-bar" :style="{ width: (currentStep + 1) * 33.33 + '%' }"></div>
+      </div>
+      
+    <form @submit.prevent="submitForm" action="https://0f31-173-225-243-208.ngrok-free.app/create_event" method="POST">
+      <div class="form-fields">
+        <div v-if="currentStep === 0">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <div class="input-container">
+              <input 
+                type="text" 
+                id="title" 
+                v-model="eventData.title" 
+                placeholder="Event title"
+              />
+            </div>
           </div>
-          <h2 class="form-title">Create an Event</h2>
+          
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+              id="description" 
+              v-model="eventData.description" 
+              placeholder="Add a description. Links, emojis and new lines are supported."
+              rows="3"
+            ></textarea>
+          </div>
         </div>
-        
-        <div class="tabs">
-          <div class="tab" :class="{ active: currentStep === 0 }" @click="currentStep = 0">Details</div>
-          <div class="tab" :class="{ active: currentStep === 1 }" @click="currentStep = 1">Date and location</div>
-          <div class="tab" :class="{ active: currentStep === 2 }" @click="currentStep = 2">Guests</div>
-          <div class="progress-bar" :style="{ width: (currentStep + 1) * 33.33 + '%' }"></div>
-        </div>
-        
-        <div class="form-fields">
-          <div v-if="currentStep === 0">
-            <div class="form-group">
-              <label for="title">Title</label>
-              <div class="input-container">
-                <input 
-                  type="text" 
-                  id="title" 
-                  v-model="eventData.title" 
-                  placeholder="Event title"
-                />
+
+        <div v-if="currentStep === 1">
+          <div class="form-group">
+            <label for="date">Date and Time</label>
+            <div class="date-time-picker">
+              <div class="date-input">
+                <input type="date" id="date" v-model="eventData.date" />
+                <button class="calendar-button">
+                  <!-- <div class="calendar-icon"></div> -->
+                </button>
               </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea 
-                id="description" 
-                v-model="eventData.description" 
-                placeholder="Add a description. Links, emojis and new lines are supported."
-                rows="3"
-              ></textarea>
-            </div>
-  
-          </div>
-  
-          <div v-if="currentStep === 1">
-    
-  
-            <div class="form-group">
-                <label for="title">Date and Time</label>
-              <div class="date-time-picker">
-                <div class="date-input">
-                  <input type="date" v-model="eventData.date" />
-                  <button class="calendar-button">
-                    <!-- <div class="calendar-icon"></div> -->
+              <div class="time-range">
+                <span class="time-label">from</span>
+                <div class="time-input">
+                  <input type="time" id="startTime" v-model="eventData.startTime" />
+                  <button class="time-button">
+                    <div class="clock-icon"></div>
                   </button>
                 </div>
-                <div class="time-range">
-                  <span class="time-label">from</span>
-                  <div class="time-input">
-                    <input type="time" v-model="eventData.startTime" />
-                    <button class="time-button">
-                      <div class="clock-icon"></div>
-                    </button>
-                  </div>
-                  <span class="time-label">to</span>
-                  <div class="time-input">
-                    <input type="time" v-model="eventData.endTime" />
-                    <button class="time-button">
-                      <div class="clock-icon"></div>
-                    </button>
-                  </div>
+                <span class="time-label">to</span>
+                <div class="time-input">
+                  <input type="time" id="endTime" v-model="eventData.endTime" />
+                  <button class="time-button">
+                    <div class="clock-icon"></div>
+                  </button>
                 </div>
               </div>
-              <button class="availability-button">
-                Find based on participants' availability
-              </button>
             </div>
-  
-            <div class="form-group">
-                <label for="title">Location</label>
-                <div class="location-input">
-                <input 
-                  type="text" 
-                  v-model="eventData.location" 
-                  placeholder="Enter a location" 
-                />
-              </div>
-              <div class="ai-suggestions">
-                <div class="suggestion-toggle">
-                  <label>Want AI suggestions?</label>
-                  <div class="toggle-container">
-                    <div 
-                      class="toggle" 
-                      :class="{ 'active': aiSuggestions }"
-                      @click="toggleAiSuggestions"
-                    >
-                      <div class="toggle-button"></div>
-                    </div>
+            <button class="availability-button" @click="goToSchedule">
+              Find based on participants' availability
+            </button>
+          </div>
+
+          <div class="form-group">
+            <label for="location">Location</label>
+            <div class="location-input">
+              <input 
+                type="text" 
+                id="location" 
+                v-model="eventData.location" 
+                placeholder="Enter a location" 
+              />
+            </div>
+            <div class="ai-suggestions">
+              <div class="suggestion-toggle">
+                <label>Want AI suggestions?</label>
+                <div class="toggle-container">
+                  <div 
+                    class="toggle" 
+                    :class="{ 'active': aiSuggestions }"
+                    @click="toggleAiSuggestions"
+                  >
+                    <div class="toggle-button"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-  
-          <div v-if="currentStep === 2">
-            <div class="form-header">
+        <div v-if="currentStep === 2">
+          <div class="form-header">
             <div class="people-icon">
               <div class="people-svg"></div>
             </div>
@@ -133,15 +131,18 @@
           </div>
         </div>
       </div>
-        
-        <div class="form-actions">
-          <button class="btn-cancel" @click="cancel">Cancel</button>
-          <button class="btn-cancel" @click="previousStep" v-if="currentStep > 0">Back</button>
-          <button class="btn-next" @click="nextStep">{{ currentStep < steps.length - 1 ? 'Next' : 'Submit' }}</button>
-        </div>
+      
+      <div class="form-actions">
+        <button class="btn-cancel" @click="cancel">Cancel</button>
+        <button class="btn-cancel" @click="previousStep" v-if="currentStep > 0">Back</button>
+        <button class="btn-next" @click="nextStep">{{ currentStep < steps.length - 1 ? 'Next' : 'Submit' }}</button>
       </div>
+    </form>
+    <!-- <div v-if="message" class="message">{{ message }}</div> -->
+
     </div>
-  </template>
+  </div>
+</template>
   
   <script>
 export default {
@@ -184,7 +185,16 @@ export default {
     submitForm() {
       console.log('Form submitted:', this.eventData)
       // Here you would typically send the data to your backend
+      // using an HTTP request
+      this.message = 'Event added'; // Highlighted line
+      //alert('Event added'); // Display an alert when the form is submitted
+
     },
+
+    goToSchedule() {
+      this.$router.push({ name: 'web/acara-web/src/components/Schedule.vue' }); // Ensure the route name matches your router configuration
+    },
+
     cancel() {
       this.$router.push({ path: '/' });
     },
@@ -346,7 +356,7 @@ export default {
   align-items: center;
   border: 1px solid #dadce0;
   border-radius: 4px;
-  padding: 8px 12px;
+  padding: 4px 8px;
 }
 
 .input-container input {
@@ -359,7 +369,13 @@ export default {
 
 .input-container input,
 textarea {
-  color: #202124; /* Set the text color to a visible color */
+  color: #202124; /* Set the text color to a visible color */      
+}
+
+.input-container input#title {
+  width: 100%; /* Adjust the width as needed */
+  padding: 2px 2px; /* Adjust the padding as needed */
+  font-size: 16px; /* Adjust the font size as needed */
 }
 
 .emoji {

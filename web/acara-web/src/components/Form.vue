@@ -125,16 +125,10 @@
             </div>
           </div>
 
-          <div class="guest-avatars">
-            <div class="avatar" v-for="(guest, index) in guests" :key="index">
-              <div 
-                class="avatar-circle" 
-                :style="{ backgroundColor: getAvatarColor(index) }"
-              >
-                {{ getInitials(guest) }}
-                <span class="remove-avatar" @click="removeGuest(index)">×</span>
-
-              </div>
+          <div class="guest-list">
+            <div class="guest-item" v-for="(guest, index) in guests" :key="index">
+              <span class="remove-guest" @click="removeGuest(index)">×</span>
+              {{ guest }}
             </div>
           </div>
         </div>
@@ -194,29 +188,40 @@ export default {
     cancel() {
       this.$router.push({ path: '/' });
     },
+    // inviteGuest() {
+    //   if (this.guestInput) {
+    //     this.guests.push(this.guestInput);
+    //     this.guestInput = '';
+    //   }
+    // },
+
     inviteGuest() {
-      if (this.guestInput) {
-        this.guests.push(this.guestInput);
+      if (this.guestInput.trim()) {
+        this.guests.push(this.guestInput.trim());
         this.guestInput = '';
       }
     },
     removeGuest(index) {
       this.guests.splice(index, 1);
-    },
-    getInitials(name) {
-      return name.split(' ').map(word => word[0]).join('').toUpperCase();
-    },
-    getAvatarColor(index) {
-      // Array of colors for avatars
-      const colors = [
-        '#4285F4', // blue
-        '#34A853', // green
-        '#FBBC05', // yellow
-        '#EA4335', // red
-        '#8AB4F8'  // light blue
-      ];
-      return colors[index % colors.length];
     }
+
+    // removeGuest(index) {
+    //   this.guests.splice(index, 1);
+    // },
+    // getInitials(name) {
+    //   return name.split(' ').map(word => word[0]).join('').toUpperCase();
+    // },
+    // getAvatarColor(index) {
+    //   // Array of colors for avatars
+    //   const colors = [
+    //     '#4285F4', // blue
+    //     '#34A853', // green
+    //     '#FBBC05', // yellow
+    //     '#EA4335', // red
+    //     '#8AB4F8'  // light blue
+    //   ];
+    //   return colors[index % colors.length];
+    // }
   }
 }
 </script>
@@ -298,11 +303,12 @@ export default {
 }
 
 .tab {
+  flex: 1; /* Ensure tabs are evenly divided */
   padding: 12px 16px;
   color: #5f6368;
   font-size: 14px;
   cursor: pointer;
-  position: relative;
+  text-align: center; /* Center align text */
 }
 
 .tab.active {
@@ -718,7 +724,23 @@ textarea {
   border-radius: 4px;
 }
 
-.guest-avatars {
+.guest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.guest-item {
+  display: flex;
+  align-items: center;
+  background-color: #f1f3f4;
+  padding: 8px 12px;
+  border-radius: 4px;
+  position: relative;
+}
+
+/* .guest-avatars {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -742,7 +764,7 @@ textarea {
   justify-content: center;
   font-size: 12px;
   font-weight: 500;
-}
+} */
 
 
 .remove-avatar {

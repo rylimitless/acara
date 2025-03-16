@@ -119,7 +119,7 @@ def storehistory(query,response):
     return True
 
 def get_query(query):
-    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCN1ByE6My2yoxyiM1XhziX_fqkeT1dE2k"
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="
     headers = {
         'Content-Type': 'application/json'
     }

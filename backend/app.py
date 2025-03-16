@@ -1,5 +1,5 @@
 from flask import Flask, request , session
-import functions
+from functions import *
 
 app = Flask(__name__)
 app.secret_key = 'f5a5f4bbc884a568e918fb416ee39535'
@@ -7,7 +7,6 @@ app.secret_key = 'f5a5f4bbc884a568e918fb416ee39535'
 @app.route('/')
 def start():
     return {'name': 'Hello World!'}
-
 
 
 @app.route('/login', methods=['POST'])
@@ -60,7 +59,6 @@ def create_organization():
         data = request.get_json()
     else:
         data = request.form
-        
     name = data.get('name')
     description = data.get('description')
     admin_id = data.get('admin_id')
@@ -104,7 +102,17 @@ def get_events():
     if not id:
         return {'error': 'Missing required fields'}, 400
     
-    return functions.get_events()
+    data = get_events_for_user(id)
+    return {'data':data}
+
+@app.route('/getTasks')
+def getTasks():
+    id = request.args.get('id')
+    if not id:
+        return {'error': 'Missing required fields'}, 400
+    
+    data = get_user_tasks(id)
+    return {'data': data}
 
 
 if __name__ == '__main__':  

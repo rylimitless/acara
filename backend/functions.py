@@ -63,6 +63,20 @@ def create_org(name,description,admin_id):
     conn.commit()
     return True
 
+def get_user_tasks(user_id):
+    cur.execute('SELECT * FROM Tasks WHERE assigned_user_id = %s', (user_id,))
+    tasks = []
+    for task in cur.fetchall():
+        tasks.append({
+            'task_id': task[0],
+            'title': task[1],
+            'description': task[2],
+            'event_id': task[3],
+            'assigned_user_id': task[4],
+            'priority': task[5]
+        })
+    return tasks
+    # return cur.fetchall()
 
 def org_exist(org_id:int) -> int:
     cur.execute('SELECT * FROM EventGroups WHERE   group_id = %s', (org_id,))
@@ -75,9 +89,20 @@ def create_event(name,description,group_id):
     conn.commit()
     return True
 
-def get_events(group_id):
-    cur.execute('SELECT * FROM Events WHERE group_id = %s', (group_id,))
-    return cur.fetchall()
+def get_events_for_user(user_id):
+    cur.execute('select * from Events inner join UserEvents on Events.event_id = UserEvents.event_id where UserEvents.user_id = %s', (user_id,))
+    # return cur.fetchall()
+    events = []
+    for task in cur.fetchall():
+        events.append({
+            'event_id': task[0],
+            'group_id': task[1],
+            'name': task[2],
+            'description': task[3],
+            'dt': task[4],
+            # 'priority': task[5]
+        })
+    return events
 
 # def create_task(name,description,event_id,priority):
 #     cur.execute('INSERT INTO Tasks (title, description, event_id) VALUES (%s, %s, %s,%s)', (name, description, event_id))

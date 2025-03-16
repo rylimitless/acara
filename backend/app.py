@@ -1,12 +1,12 @@
-from flask import Flask, request
+from flask import Flask, request , session
 from functions import *
 
 app = Flask(__name__)
+app.secret_key = 'f5a5f4bbc884a568e918fb416ee39535'
 
 @app.route('/')
 def start():
     return {'name': 'Hello World!'}
-
 
 
 @app.route('/login', methods=['POST'])
@@ -59,7 +59,6 @@ def create_organization():
         data = request.get_json()
     else:
         data = request.form
-        
     name = data.get('name')
     description = data.get('description')
     admin_id = data.get('admin_id')
@@ -108,6 +107,24 @@ def createTask():
     assign_user_id = int(data.get('assign_user_id'))
     event_id = int(data.get('event_id'))
     priority = int(data.get('priority'))
+@app.route('/getevents',)
+def get_events():
+    id = request.args.get('id')
+    if not id:
+        return {'error': 'Missing required fields'}, 400
+    
+    data = get_events_for_user(id)
+    return {'data':data}
+
+@app.route('/getTasks')
+def getTasks():
+    id = request.args.get('id')
+    if not id:
+        return {'error': 'Missing required fields'}, 400
+    
+    data = get_user_tasks(id)
+    return {'data': data}
+
 
     if not all([name, description, assign_user_id,event_id]) and priority != None:
         return {'error': 'Missing required fields'}, 400

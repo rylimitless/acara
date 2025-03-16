@@ -10,6 +10,5 @@ services:
     volumes:
       - ./schema.sql:/docker-entrypoint-initdb.d/init.sql
       - acara-mysql-db:/var/lib/mysql
-  
 volumes:
   acara-mysql-db:

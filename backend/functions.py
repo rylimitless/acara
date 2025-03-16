@@ -36,6 +36,12 @@ def user_exist(userid:int) -> int:
         return True
     return False
 
+def event_exist(event_id:int) -> int:
+    cur.execute('SELECT * FROM Events WHERE event_id = %s', (event_id,))
+    if cur.fetchone() != None:  
+        return True
+    return False
+
 def login_user(username, password):
     # Add your authentication logic here
     # Return tuple of (success boolean, user_id)
@@ -68,7 +74,7 @@ def create_event(name,description,group_id):
     conn.commit()
     return True
 
-# def create_task(name,description,event_id,priority):
-#     cur.execute('INSERT INTO Tasks (title, description, event_id) VALUES (%s, %s, %s,%s)', (name, description, event_id))
-#     conn.commit()
-#     return True
+def create_task(name,description,assign_user_id,event_id,priority):
+    cur.execute('INSERT INTO Tasks (title, description,priority,assigned_user_id, event_id) VALUES (%s, %s,%s ,%s,%s)', (name, description,priority,assign_user_id, event_id))
+    conn.commit()
+    return True

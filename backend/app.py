@@ -97,6 +97,28 @@ def create_event_plan():
         return {'error': 'Event already exists'}, 400
     return {'status': 'success', 'message': f'Event {name} created successfully'}, 201
 
+@app.route('/create_task', methods=['POST'])
+def createTask():
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form
+    name = data.get('name')
+    description = data.get('description')
+    assign_user_id = int(data.get('assign_user_id'))
+    event_id = int(data.get('event_id'))
+    priority = int(data.get('priority'))
 
+    if not all([name, description, assign_user_id,event_id]) and priority != None:
+        return {'error': 'Missing required fields'}, 400
+    if not user_exist(assign_user_id):
+        return {'error': 'User does not exist'}, 400
+    if not event_exist(event_id):
+        return {'error': 'Event does not exist'}, 400
+
+    status = create_task(name, description, assign_user_id, event_id, priority)
+    if not status:
+        return {'error': 'Task already exists'}, 400
+    return {'status': 'success', 'message': f'Task {name} created successfully'}, 201
 if __name__ == '__main__':  
     app.run(debug=True)
